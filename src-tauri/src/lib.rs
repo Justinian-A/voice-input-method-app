@@ -12,12 +12,40 @@ fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
 
+// 获取Python命令名（跨平台兼容）
+fn get_python_command() -> String {
+    if cfg!(target_os = "windows") {
+        "python".to_string()
+    } else {
+        "python3".to_string()
+    }
+}
+
 // 获取Python脚本路径
 fn get_python_script_path() -> PathBuf {
+    // 优先使用当前目录
     let mut path = std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."));
     path.push("python");
     path.push("offline_asr.py");
-    path
+    
+    if path.exists() {
+        return path;
+    }
+    
+    // 回退到可执行文件所在目录
+    if let Ok(exe_path) = std::env::current_exe() {
+        if let Some(exe_dir) = exe_path.parent() {
+            let mut path = exe_dir.to_path_buf();
+            path.push("python");
+            path.push("offline_asr.py");
+            if path.exists() {
+                return path;
+            }
+        }
+    }
+    
+    // 返回默认路径
+    PathBuf::from("python").join("offline_asr.py")
 }
 
 // 检查离线识别环境
@@ -31,7 +59,8 @@ async fn check_offline_asr_environment() -> Result<bool, String> {
     }
     
     // 检查Python环境
-    let output = Command::new("python")
+    let python_cmd = get_python_command();
+    let output = Command::new(&python_cmd)
         .args(["--version"])
         .output()
         .map_err(|e| format!("无法执行Python: {}", e))?;
@@ -41,7 +70,7 @@ async fn check_offline_asr_environment() -> Result<bool, String> {
     }
     
     // 检查faster-whisper依赖
-    let output = Command::new("python")
+    let output = Command::new(&python_cmd)
         .args(["-c", "import faster_whisper; print('OK')"])
         .output()
         .map_err(|e| format!("无法检查依赖: {}", e))?;
@@ -84,7 +113,8 @@ async fn offline_transcribe(
         .collect();
     
     // 执行Python脚本
-    let output = Command::new("python")
+    let python_cmd = get_python_command();
+    let output = Command::new(&python_cmd)
         .args(&args)
         .stdin(std::process::Stdio::piped())
         .stdout(std::process::Stdio::piped())
@@ -134,7 +164,8 @@ async fn offline_transcribe_file(
     }
     
     // 执行Python脚本
-    let output = Command::new("python")
+    let python_cmd = get_python_command();
+    let output = Command::new(&python_cmd)
         .args(&args)
         .output()
         .map_err(|e| format!("无法执行Python脚本: {}", e))?;
