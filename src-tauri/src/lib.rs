@@ -78,7 +78,7 @@ async fn offline_transcribe(
     }
     
     // 将音频数据转换为字节
-    let audio_bytes: Vec<u8> = audio_data
+    let _audio_bytes: Vec<u8> = audio_data
         .iter()
         .flat_map(|f| f.to_le_bytes())
         .collect();
