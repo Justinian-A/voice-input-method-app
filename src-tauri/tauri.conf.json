@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "voice-input-method",
+  "productName": "语音输入法",
   "version": "0.1.0",
-  "identifier": "com.lenovo.voice-input-method",
+  "identifier": "com.voice-input-method.app",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -12,9 +12,14 @@
   "app": {
     "windows": [
       {
-        "title": "voice-input-method",
-        "width": 800,
-        "height": 600
+        "title": "语音输入法",
+        "width": 1000,
+        "height": 700,
+        "minWidth": 800,
+        "minHeight": 600,
+        "center": true,
+        "resizable": true,
+        "decorations": true
       }
     ],
     "security": {
@@ -30,6 +35,17 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "both"
+      }
+    },
+    "macOS": {
+      "minimumSystemVersion": "10.15"
+    },
+    "category": "Utility",
+    "shortDescription": "语音输入法 - 实时语音转文字",
+    "longDescription": "一款基于Tauri 2.0的桌面语音输入法应用，支持实时语音转文字，帮助用户提高文本输入效率。"
   }
 }
