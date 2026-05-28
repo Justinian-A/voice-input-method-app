@@ -1,6 +1,11 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 use std::process::Command;
 use std::path::PathBuf;
+use tauri::{
+    menu::{MenuBuilder, MenuItemBuilder},
+    tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
+    Manager,
+};
 
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -157,6 +162,57 @@ pub fn run() {
             offline_transcribe,
             offline_transcribe_file
         ])
+        .setup(|app| {
+            // 创建系统托盘菜单
+            let show = MenuItemBuilder::with_id("show", "显示窗口").build(app)?;
+            let hide = MenuItemBuilder::with_id("hide", "隐藏窗口").build(app)?;
+            let quit = MenuItemBuilder::with_id("quit", "退出").build(app)?;
+            
+            let menu = MenuBuilder::new(app)
+                .items(&[&show, &hide, &quit])
+                .build()?;
+            
+            // 创建系统托盘图标
+            let _tray = TrayIconBuilder::new()
+                .menu(&menu)
+                .tooltip("语音输入法")
+                .on_menu_event(move |app, event| match event.id().as_ref() {
+                    "show" => {
+                        if let Some(webview_window) = app.get_webview_window("main") {
+                            let _ = webview_window.unminimize();
+                            let _ = webview_window.show();
+                            let _ = webview_window.set_focus();
+                        }
+                    }
+                    "hide" => {
+                        if let Some(webview_window) = app.get_webview_window("main") {
+                            let _ = webview_window.hide();
+                        }
+                    }
+                    "quit" => {
+                        app.exit(0);
+                    }
+                    _ => (),
+                })
+                .on_tray_icon_event(|tray, event| {
+                    if let TrayIconEvent::Click {
+                        button: MouseButton::Left,
+                        button_state: MouseButtonState::Up,
+                        ..
+                    } = event
+                    {
+                        let app = tray.app_handle();
+                        if let Some(webview_window) = app.get_webview_window("main") {
+                            let _ = webview_window.unminimize();
+                            let _ = webview_window.show();
+                            let _ = webview_window.set_focus();
+                        }
+                    }
+                })
+                .build(app)?;
+            
+            Ok(())
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

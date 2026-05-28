@@ -6,14 +6,20 @@ export { AudioRecorder, createAudioRecorder } from './audio-recorder';
 export type { AudioRecorderConfig, AudioDataCallback } from './audio-recorder';
 export { float32ToPCM16, float32ToArrayBuffer } from './audio-recorder';
 
-export { getBaiduASRConfig, defaultConfig } from './config';
-export type { BaiduASRConfig } from './config';
+export { getBaiduASRConfig, defaultConfig, SUPPORTED_LANGUAGES } from './config';
+export type { BaiduASRConfig, LanguageConfig } from './config';
 
 export { OfflineASR, createOfflineASR, AVAILABLE_MODELS } from './offline-asr';
 export type { OfflineASRResult, OfflineASRConfig, ModelConfig } from './offline-asr';
 
 export { TextCorrector, createTextCorrector } from './text-corrector';
 export type { TextCorrectorConfig } from './text-corrector';
+
+export { HistoryManager, createHistoryManager } from './history';
+export type { HistoryItem, HistoryStorage } from './history';
+
+export { SettingsManager, createSettingsManager } from './settings';
+export type { AppSettings } from './settings';
 
 // 语音识别管理器
 import { BaiduASR, createBaiduASR } from './baidu-asr';
