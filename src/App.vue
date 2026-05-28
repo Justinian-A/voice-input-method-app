@@ -1021,11 +1021,11 @@ function handleKeyDown(e: KeyboardEvent) {
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  border: none;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   cursor: pointer;
   transition: all 0.3s;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
   position: relative;
   overflow: hidden;
 }
@@ -1045,11 +1045,15 @@ function handleKeyDown(e: KeyboardEvent) {
 }
 
 .record-btn.recording {
-  background: linear-gradient(135deg, var(--danger), #dc2626);
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.5);
 }
 
 .record-btn.loading {
-  background: linear-gradient(135deg, var(--warning), #d97706);
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.5);
 }
 
 .record-btn-inner {
@@ -1331,6 +1335,19 @@ kbd {
 
   .language-select {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  }
+
+  .record-btn {
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+  }
+
+  .record-btn.recording {
+    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+  }
+
+  .record-btn.loading {
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
   }
 }
 
